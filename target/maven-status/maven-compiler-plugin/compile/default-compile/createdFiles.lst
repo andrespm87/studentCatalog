@@ -1,0 +1,6 @@
+com\fanniemae\studentcatalog\dao\UserDao.class
+com\fanniemae\studentcatalog\model\User.class
+com\fanniemae\studentcatalog\servlet\LoginCheck.class
+com\fanniemae\studentcatalog\model\Professor.class
+com\fanniemae\studentcatalog\model\Student.class
+com\fanniemae\studentcatalog\servlet\AddUser.class
