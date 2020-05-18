@@ -2,7 +2,6 @@ package com.fanniemae.studentcatalog.servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +32,6 @@ public class LoginCheck extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -45,10 +43,10 @@ public class LoginCheck extends HttpServlet {
 			throws ServletException, IOException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+
 		UserDao userDao = new UserDao();
 		User user = userDao.get(username, password);
-		
+
 		if (user != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("user", user);

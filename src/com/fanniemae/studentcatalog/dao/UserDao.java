@@ -32,6 +32,12 @@ public class UserDao {
 		emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 	}
 
+	/**
+	 * Get user by username and password.
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public User get(String username, String password) {
 		User user;
 		EntityManager em = null;
@@ -52,7 +58,11 @@ public class UserDao {
 		}
 		return user;
 	}
-	
+
+	/**
+	 * Get list of users.
+	 * @return
+	 */
 	public List<User> list() {
 
 		List<User> userList = new ArrayList<>();
@@ -70,7 +80,36 @@ public class UserDao {
 		}
 		return userList;
 	}
-	
+
+	/**
+	 * Get list of user by role.
+	 * @param role
+	 * @return
+	 */
+	public List<User> listByRole(String role) {
+
+		List<User> userList = new ArrayList<>();
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			TypedQuery<User> query = em.createQuery("SELECT u FROM User u where u.role = :role", User.class);
+			query.setParameter("role", role);
+			userList = query.getResultList();
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (em != null)
+				em.close();
+		}
+		return userList;
+	}
+
+	/**
+	 * Add an user to the catalog.
+	 * @param user
+	 */
 	public void add(User user) {
 		EntityManager em = null;
 		try {
@@ -85,4 +124,60 @@ public class UserDao {
 				em.close();
 		}
 	}
+
+	/**
+	 * Remove users from the catalog.
+	 * @param username
+	 */
+	public void remove(String username) {
+
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+
+			// Retrieve user to be deleted.
+			TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+			query.setParameter("username", username);
+			User user = query.getSingleResult();
+			em.remove(user);
+			em.getTransaction().commit();
+
+		} catch (NoResultException e) {
+			throw e;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (em != null)
+				em.close();
+		}
+	}
+
+	/**
+	 * Update user information.
+	 * @param user
+	 */
+	public void update(User user) {
+
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
+			User existUser = em.find(User.class, user.getId());
+			em.getTransaction().begin();
+			existUser.setUsername(user.getUsername());
+			existUser.setPassword(user.getPassword());
+			existUser.setFirstName(user.getFirstName());
+			existUser.setLastName(user.getLastName());
+			existUser.setSsn(user.getSsn());
+			existUser.setRole(user.getRole());
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (em != null)
+				em.close();
+		}
+	}
+
 }
